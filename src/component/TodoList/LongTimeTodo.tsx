@@ -4,8 +4,10 @@ import { defaultLongTodoList } from "@/store/todo";
 import resolveClasses from "@/utils/resolveClasses";
 import { CheckOne, CloseOne, Plus, ReduceOne } from "@icon-park/react";
 import { nanoid } from "nanoid";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./index.css";
+import { sender as todoArchiveSender } from "../TodoArchive/logic";
+import TodoList from ".";
 
 interface TodoItem {
   id: string;
@@ -20,7 +22,20 @@ interface DoneItem {
   doneTime: number;
 }
 
+interface TodoClone {
+  todoList : TodoItem[],
+  doneList : DoneItem[],
+}
+
+const todoClone : TodoClone = {
+  todoList: defaultLongTodoList,
+  doneList: [],
+};
+
+
 const LongTimeTodo = () => {
+  const [visible, setVisible] = useState(true);
+
   const [todoList, setTodoList] = useLocalStorageState(
     "long-todolist",
     defaultLongTodoList
@@ -36,6 +51,7 @@ const LongTimeTodo = () => {
     const newTodoItem = { id: nanoid(), ...content };
     const newTodoList = [newTodoItem, ...todoList];
     setTodoList(newTodoList);
+    todoClone.todoList = newTodoList.filter(_=>true);
   };
 
   const deleteTodoItem = (item: TodoItem) => {
@@ -43,6 +59,7 @@ const LongTimeTodo = () => {
       (todo: TodoItem) => todo.id !== item.id
     );
     setTodoList(newTodoList);
+    todoClone.todoList = newTodoList.filter(_=>true);
   };
 
   const competeTodoItem = (item: TodoItem) => {
@@ -58,7 +75,9 @@ const LongTimeTodo = () => {
     ];
     console.log(newDoneList);
     setTodoList(newTodoList);
+    todoClone.todoList = newTodoList.filter(_=>true);
     setDoneList(newDoneList);
+    todoClone.doneList = newDoneList.filter(_=>true);
   };
 
   const deleteDoneItem = (item: TodoItem) => {
@@ -66,6 +85,7 @@ const LongTimeTodo = () => {
       (done: DoneItem) => done.id !== item.id
     );
     setDoneList(newDoneList);
+    todoClone.doneList = newDoneList.filter(_=>true);
   };
 
   const redoDoneItem = (item: TodoItem) => {
@@ -74,12 +94,17 @@ const LongTimeTodo = () => {
     );
     const newTodoList = [item, ...todoList];
     setDoneList(newDoneList);
+    todoClone.todoList = newTodoList.filter(_=>true);
     setTodoList(newTodoList);
+    todoClone.doneList = newDoneList.filter(_=>true);
   };
 
   return (
-    <section className="todo">
-      <TodoHeader type={type} setType={setType} />
+    <section className={resolveClasses(
+      "todo",
+      visible ? "" : "hide"
+    )}>
+      <TodoHeader type={type} setType={setType} setVisible={setVisible} />
       {type === "todo" && (
         <TodoContent
           list={todoList}
@@ -102,10 +127,19 @@ const LongTimeTodo = () => {
 interface TodoHeaderProps {
   type: string;
   setType: (value: string) => void;
+  setVisible: (value: boolean) => void;
 }
 
 const TodoHeader: React.FC<TodoHeaderProps> = (props) => {
-  const { type, setType } = props;
+
+
+  const { type, setType, setVisible } = props;
+
+  function save() {
+    todoArchiveSender.ping().then(callback => {
+      callback('月度计划', todoClone);
+    });
+  }
 
   const date = new Date();
 
@@ -113,6 +147,14 @@ const TodoHeader: React.FC<TodoHeaderProps> = (props) => {
     <section className="todo-header">
       <span className="todo-header-title">月度计划</span>
       <section className="todo-header-btns">
+        <section
+          className={resolveClasses(
+            "todo-header-btn center"
+          )}
+          onClick={() => {save(); setVisible(false); }}
+        >
+          Save
+        </section>
         <section
           className={resolveClasses(
             "todo-header-btn center",

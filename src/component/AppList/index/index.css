@@ -44,6 +44,12 @@
   width: 60px;
   transition: all 0.19s ease-out;
   cursor: pointer;
+  position: relative;
+}
+.AppList-app > i {
+  position: absolute;
+  top: 0;
+  right: 1em;
 }
 .AppList-app > img,
 .AppList-app > span {

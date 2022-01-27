@@ -1,4 +1,4 @@
-import { AddOne, SettingOne } from "@icon-park/react";
+import { AddOne, SettingOne, ArrowDown as TodoArchiveIcon } from "@icon-park/react";
 import { addApp } from "../Modal/AddModal";
 import { editApp } from "../Modal/EditModal";
 import "./index.css";
@@ -6,6 +6,7 @@ import "./index.css";
 // @ts-ignore
 import errorImg from "/assets/icon/error.png";
 import { openWindow } from "../Window";
+import { receiver as todoArchiveReceiver } from "../../TodoArchive/logic";
 import { useLocalStorageState } from "@/hooks/useLocalStorageState";
 import { defaultUserAppList, UserApp } from "@/store/app";
 import {
@@ -14,10 +15,22 @@ import {
   useCallback,
   useEffect,
   useRef,
+  useState,
 } from "react";
 import LoImage from "./LoImage";
 
+
 export const AppList = () => {
+  const [archivedTodos, setArchivedTodos] = useState(new Map);
+
+  todoArchiveReceiver.pong((title, item) => {
+    console.log(item);
+    archivedTodos.set(title, item);
+    console.log('archivedTodos', archivedTodos);
+    setArchivedTodos(new Map(archivedTodos));
+    console.log('archivedTodos', archivedTodos);
+  });
+
   // 内置应用列表属于不可删改的应用
   // const [preAppList, setPreAppList] = useState([])
   // todo: 网址文件夹管理器（）子应用、小游戏
@@ -112,6 +125,22 @@ export const AppList = () => {
     <>
       <div id="App-window"></div>
       <section className="AppList-bottom">
+        <div
+          className="AppList-app center"
+          onClick={() => {}}
+          ref={getAppListApp}
+          onMouseEnter={appMounseEnter}
+          onMouseLeave={appMounseLeave}
+          onMouseMove={appMounseMove}
+        >
+          <TodoArchiveIcon
+            theme="outline"
+            size="30"
+            fill="slateblue"
+            strokeWidth={3}
+          />
+          <i>{archivedTodos.size}</i>
+        </div>
         <div
           className="AppList-app center"
           onClick={() => {}}
