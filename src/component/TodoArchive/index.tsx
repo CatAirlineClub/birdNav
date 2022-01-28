@@ -43,8 +43,12 @@ const TodoArchive = (props: Props) => {
 
   function leaveArchive() {
     if (depth == 1) props.setAppListVisibility(true);
+    if (depth == 2) {
+      setCurrentFolder(archivedTodos);
+    } else {
+      setCurrentFolder([]);
+    }
     setDepth(depth - 1);
-    setCurrentFolder([]);
   }
 
   return (
