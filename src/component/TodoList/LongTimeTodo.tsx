@@ -34,7 +34,7 @@ const todoClone : TodoClone = {
 
 
 const LongTimeTodo = () => {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisibility] = useState(true);
 
   const [todoList, setTodoList] = useLocalStorageState(
     "long-todolist",
@@ -104,7 +104,7 @@ const LongTimeTodo = () => {
       "todo",
       visible ? "" : "hide"
     )}>
-      <TodoHeader type={type} setType={setType} setVisible={setVisible} />
+      <TodoHeader type={type} setType={setType} setVisible={setVisibility} />
       {type === "todo" && (
         <TodoContent
           list={todoList}
