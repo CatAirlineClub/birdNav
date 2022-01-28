@@ -8,14 +8,13 @@ import React, { useEffect, useState } from "react";
 import "./index.css";
 import { sender as todoArchiveSender } from "../../logic/todo";
 import TodoList from ".";
-import { TodoItem, DoneItem, TodoListNode } from '../../logic/todo';
+import { TodoItem, DoneItem, TodoListNode } from "../../logic/todo";
 
-
-const todoClone : TodoListNode = {
+const todoClone: TodoListNode = {
+  title: "月度计划",
   todoList: defaultLongTodoList,
   doneList: [],
 };
-
 
 const LongTimeTodo = () => {
   const [visible, setVisibility] = useState(true);
@@ -35,7 +34,7 @@ const LongTimeTodo = () => {
     const newTodoItem = { id: nanoid(), ...content };
     const newTodoList = [newTodoItem, ...todoList];
     setTodoList(newTodoList);
-    todoClone.todoList = newTodoList.filter(_=>true);
+    todoClone.todoList = newTodoList.filter((_) => true);
   };
 
   const deleteTodoItem = (item: TodoItem) => {
@@ -43,7 +42,7 @@ const LongTimeTodo = () => {
       (todo: TodoItem) => todo.id !== item.id
     );
     setTodoList(newTodoList);
-    todoClone.todoList = newTodoList.filter(_=>true);
+    todoClone.todoList = newTodoList.filter((_) => true);
   };
 
   const competeTodoItem = (item: TodoItem) => {
@@ -59,9 +58,9 @@ const LongTimeTodo = () => {
     ];
     console.log(newDoneList);
     setTodoList(newTodoList);
-    todoClone.todoList = newTodoList.filter(_=>true);
+    todoClone.todoList = newTodoList.filter((_) => true);
     setDoneList(newDoneList);
-    todoClone.doneList = newDoneList.filter(_=>true);
+    todoClone.doneList = newDoneList.filter((_) => true);
   };
 
   const deleteDoneItem = (item: TodoItem) => {
@@ -69,7 +68,7 @@ const LongTimeTodo = () => {
       (done: DoneItem) => done.id !== item.id
     );
     setDoneList(newDoneList);
-    todoClone.doneList = newDoneList.filter(_=>true);
+    todoClone.doneList = newDoneList.filter((_) => true);
   };
 
   const redoDoneItem = (item: TodoItem) => {
@@ -78,16 +77,13 @@ const LongTimeTodo = () => {
     );
     const newTodoList = [item, ...todoList];
     setDoneList(newDoneList);
-    todoClone.todoList = newTodoList.filter(_=>true);
+    todoClone.todoList = newTodoList.filter((_) => true);
     setTodoList(newTodoList);
-    todoClone.doneList = newDoneList.filter(_=>true);
+    todoClone.doneList = newDoneList.filter((_) => true);
   };
 
   return (
-    <section className={resolveClasses(
-      "todo",
-      visible ? "" : "hide"
-    )}>
+    <section className={resolveClasses("todo", visible ? "" : "hide")}>
       <TodoHeader type={type} setType={setType} setVisible={setVisibility} />
       {type === "todo" && (
         <TodoContent
@@ -115,13 +111,11 @@ interface TodoHeaderProps {
 }
 
 const TodoHeader: React.FC<TodoHeaderProps> = (props) => {
-
-
   const { type, setType, setVisible } = props;
 
   function save() {
-    todoArchiveSender.ping().then(callback => {
-      callback('月度计划', todoClone);
+    todoArchiveSender.ping().then((callback) => {
+      callback(todoClone);
     });
   }
 
@@ -132,10 +126,11 @@ const TodoHeader: React.FC<TodoHeaderProps> = (props) => {
       <span className="todo-header-title">月度计划</span>
       <section className="todo-header-btns">
         <section
-          className={resolveClasses(
-            "todo-header-btn center"
-          )}
-          onClick={() => {save(); setVisible(false); }}
+          className={resolveClasses("todo-header-btn center")}
+          onClick={() => {
+            save();
+            setVisible(false);
+          }}
         >
           Save
         </section>
