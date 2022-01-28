@@ -17,8 +17,10 @@ export interface TodoListNode {
   doneList: DoneItem[];
 }
 
+export type TodoListTree = (TodoListTree | TodoListNode)[];
+
 type BePromise<T> = (value: T | PromiseLike<T>) => void;
-type Acknowleage = (value: TodoListNode) => void;
+type Acknowleage = (value: TodoListTree) => void;
 
 const resolvers: BePromise<Acknowleage>[] = [];
 const callback_collection: Acknowleage[] = [];

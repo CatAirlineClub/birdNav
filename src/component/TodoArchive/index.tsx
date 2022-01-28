@@ -8,6 +8,7 @@ import { MouseEventHandler, useState } from "react";
 import {
   receiver as todoArchiveReceiver,
   TodoListNode,
+  TodoListTree,
 } from "../../logic/todo";
 
 interface Props {
@@ -19,8 +20,8 @@ interface Props {
 
 const TodoArchive = (props: Props) => {
   const [depth, setDepth] = useState(0);
-  const [currentFolder, setCurrentFolder] = useState<TodoListNode[]>([]);
-  const [archivedTodos, setArchivedTodos] = useState<TodoListNode[]>([]);
+  const [currentFolder, setCurrentFolder] = useState<TodoListTree[]>([]);
+  const [archivedTodos, setArchivedTodos] = useState<TodoListTree[]>([]);
 
   todoArchiveReceiver.pong((item) => {
     console.log(item);
@@ -86,24 +87,51 @@ const TodoArchive = (props: Props) => {
         />
         <i>{archivedTodos.length}</i>
       </div>
-      {currentFolder.map((item) => (
-        <div
-          key={item.title}
-          className="AppList-app center"
-          onClick={enterArchive}
-          onMouseEnter={props.onMouseEnter}
-          onMouseLeave={props.onMouseLeave}
-          onMouseMove={props.onMouseMove}
-          title={item.title}
-        >
-          <Schedule
-            theme="outline"
-            size="30"
-            fill="slateblue"
-            strokeWidth={3}
-          />
-        </div>
-      ))}
+      {currentFolder.map((item) => {
+        if (item instanceof Array) {
+          return (
+            <div
+              className={resolveClasses(
+                "AppList-app",
+                "center",
+                depth == 0 ? "" : "remove"
+              )}
+              onClick={enterArchive}
+              onMouseEnter={props.onMouseEnter}
+              onMouseLeave={props.onMouseLeave}
+              onMouseMove={props.onMouseMove}
+            >
+              <TodoArchiveIcon
+                theme="outline"
+                size="30"
+                fill="slateblue"
+                strokeWidth={3}
+              />
+              <i>{item.length}</i>
+            </div>
+          );
+        } else {
+          const todoList: TodoListNode = item;
+          return (
+            <div
+              key={todoList.title}
+              className="AppList-app center"
+              onClick={enterArchive}
+              onMouseEnter={props.onMouseEnter}
+              onMouseLeave={props.onMouseLeave}
+              onMouseMove={props.onMouseMove}
+              title={todoList.title}
+            >
+              <Schedule
+                theme="outline"
+                size="30"
+                fill="slateblue"
+                strokeWidth={3}
+              />
+            </div>
+          );
+        }
+      })}
     </>
   );
 };
