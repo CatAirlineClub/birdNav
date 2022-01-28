@@ -8,24 +8,8 @@ import React, { useEffect, useState } from "react";
 import "./index.css";
 import { sender as todoArchiveSender } from "../TodoArchive/logic";
 import TodoList from ".";
+import { TodoItem, DoneItem, TodoClone } from '../../logic/todo';
 
-interface TodoItem {
-  id: string;
-  title: string;
-  createTime: number;
-}
-
-interface DoneItem {
-  id: string;
-  title: string;
-  createTime: number;
-  doneTime: number;
-}
-
-interface TodoClone {
-  todoList : TodoItem[],
-  doneList : DoneItem[],
-}
 
 const todoClone : TodoClone = {
   todoList: defaultLongTodoList,
