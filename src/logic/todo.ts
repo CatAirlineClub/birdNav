@@ -16,12 +16,14 @@ export interface TodoClone {
   doneList : DoneItem[],
 }
 
+type BePromise<T> = (value: T | PromiseLike<T>)=>void;
+type Acknowleage = (title: string, value : TodoClone)=>void;
 
-const resolvers : ((value: ((title: string, value : unknown) => void) | PromiseLike<(title: string, value : unknown) => void>)=>void)[] = [];
-const callback_collection : ((title: string, value : unknown)=>void)[] = [];
+const resolvers : BePromise<Acknowleage>[] = [];
+const callback_collection : Acknowleage[] = [];
 
 export const sender = {
-    ping() : Promise<(title: string, value : unknown)=>void> {
+    ping() : Promise<Acknowleage> {
         return new Promise((resolve) => {
             if (callback_collection.length) {
                 return resolve(callback_collection.pop()!)
@@ -32,7 +34,7 @@ export const sender = {
 }
 
 export const receiver = {
-    pong(cb : (title: string, value : unknown)=>unknown) {
+    pong(cb : Acknowleage) {
         if (resolvers.length) {
             return resolvers.pop()!(cb);
         }
