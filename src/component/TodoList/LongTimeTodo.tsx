@@ -6,7 +6,7 @@ import { CheckOne, CloseOne, Plus, ReduceOne } from "@icon-park/react";
 import { nanoid } from "nanoid";
 import React, { useEffect, useState } from "react";
 import "./index.css";
-import { sender as todoArchiveSender } from "../TodoArchive/logic";
+import { sender as todoArchiveSender } from "../../logic/todo";
 import TodoList from ".";
 import { TodoItem, DoneItem, TodoClone } from '../../logic/todo';
 

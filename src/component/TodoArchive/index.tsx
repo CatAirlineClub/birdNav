@@ -1,7 +1,7 @@
 import resolveClasses from "@/utils/resolveClasses";
 import { ArrowDown as TodoArchiveIcon, ArrowCircleLeft } from "@icon-park/react";
 import { MouseEventHandler, useState } from "react";
-import { receiver as todoArchiveReceiver } from "./logic";
+import { receiver as todoArchiveReceiver } from "../../logic/todo";
 
 interface Props {
   onMouseEnter : MouseEventHandler<HTMLDivElement>,
