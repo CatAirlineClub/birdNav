@@ -6,7 +6,7 @@ import "./index.css";
 // @ts-ignore
 import errorImg from "/assets/icon/error.png";
 import { openWindow } from "../Window";
-import { receiver as todoArchiveReceiver } from "../../TodoArchive/logic";
+
 import TodoArchive from "../../TodoArchive";
 import { useLocalStorageState } from "@/hooks/useLocalStorageState";
 import { defaultUserAppList, UserApp } from "@/store/app";
@@ -22,15 +22,6 @@ import LoImage from "./LoImage";
 
 
 export const AppList = () => {
-  const [archivedTodos, setArchivedTodos] = useState(new Map);
-
-  todoArchiveReceiver.pong((title, item) => {
-    console.log(item);
-    archivedTodos.set(title, item);
-    console.log('archivedTodos', archivedTodos);
-    setArchivedTodos(new Map(archivedTodos));
-    console.log('archivedTodos', archivedTodos);
-  });
 
   // 内置应用列表属于不可删改的应用
   // const [preAppList, setPreAppList] = useState([])
@@ -127,7 +118,6 @@ export const AppList = () => {
       <div id="App-window"></div>
       <section className="AppList-bottom">
         <TodoArchive
-          archivedTodos={archivedTodos} 
           onMouseEnter={appMouseEnter}
           onMouseLeave={appMouseLeave}
           onMouseMove={appMouseMove}
