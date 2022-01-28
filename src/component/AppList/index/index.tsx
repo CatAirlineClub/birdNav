@@ -19,6 +19,7 @@ import {
   useState,
 } from "react";
 import LoImage from "./LoImage";
+import resolveClasses from "@/utils/resolveClasses";
 
 
 export const AppList = () => {
@@ -31,6 +32,8 @@ export const AppList = () => {
     "userAppList",
     defaultUserAppList
   );
+
+  const [visible, setVisibility] = useState(true);
 
   const runApp = (appData: UserApp, appIndex: number) => {
     if (appData.type === "inner") {
@@ -118,12 +121,16 @@ export const AppList = () => {
       <div id="App-window"></div>
       <section className="AppList-bottom">
         <TodoArchive
+          setAppListVisibility={setVisibility}
           onMouseEnter={appMouseEnter}
           onMouseLeave={appMouseLeave}
           onMouseMove={appMouseMove}
         />
         <div
-          className="AppList-app center"
+          className={resolveClasses(
+            "AppList-app", "center",
+            visible ? "" : "hide"
+          )}
           onClick={() => {}}
           ref={getAppListApp}
           onMouseEnter={appMouseEnter}
@@ -140,7 +147,10 @@ export const AppList = () => {
         {userAppList &&
           userAppList.map((appData: any, appIndex: number) => (
             <div
-              className="AppList-app center"
+              className={resolveClasses(
+                "AppList-app", "center",
+                visible ? "" : "hide"
+              )}
               key={appIndex}
               onClick={() => runApp(appData, appIndex)}
               onContextMenu={(e) => {
@@ -160,7 +170,10 @@ export const AppList = () => {
             </div>
           ))}
         <div
-          className="AppList-app center"
+          className={resolveClasses(
+            "AppList-app", "center",
+            visible ? "" : "hide"
+          )}
           onClick={() => addApp(userAppList, setUserAppList)}
           ref={getAppListApp}
           onMouseEnter={appMouseEnter}

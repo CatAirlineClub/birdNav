@@ -34,3 +34,6 @@
   box-shadow: 3px 3px 0 6px rgb(211, 211, 211);
   transition: cubic-bezier(0.213, 0.61, 0.356, 1) 0.9s;
 }
+.hide {
+  visibility: hidden;
+}

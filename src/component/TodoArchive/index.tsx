@@ -3,9 +3,10 @@ import { MouseEventHandler, useState } from "react";
 import { receiver as todoArchiveReceiver } from "./logic";
 
 interface Props {
-  onMouseEnter: MouseEventHandler<HTMLDivElement>,
-  onMouseLeave: MouseEventHandler<HTMLDivElement>,
-  onMouseMove: MouseEventHandler<HTMLDivElement>,
+  onMouseEnter : MouseEventHandler<HTMLDivElement>,
+  onMouseLeave : MouseEventHandler<HTMLDivElement>,
+  onMouseMove : MouseEventHandler<HTMLDivElement>,
+  setAppListVisibility : (arg0: boolean) => void,
 }
 
 const TodoArchive = (props : Props) => {
@@ -19,10 +20,14 @@ const TodoArchive = (props : Props) => {
       console.log('archivedTodos', archivedTodos);
     });
 
+    function enterArchive() {
+        props.setAppListVisibility(false);
+    }
+
     return (
         <div
           className="AppList-app center"
-          onClick={() => {}}
+          onClick={enterArchive}
           onMouseEnter={props.onMouseEnter}
           onMouseLeave={props.onMouseLeave}
           onMouseMove={props.onMouseMove}

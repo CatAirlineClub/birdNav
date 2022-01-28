@@ -3,10 +3,6 @@
   width: 100%;
 }
 
-.hide {
-  visibility: hidden;
-}
-
 .todo {
   margin: 0 23px;
   width: 396px;
