@@ -1,7 +1,8 @@
 import resolveClasses from "@/utils/resolveClasses";
 import {
-  ArrowDown as TodoArchiveIcon,
+  FolderOpen as TodoArchiveIcon,
   ArrowCircleLeft,
+  Schedule,
 } from "@icon-park/react";
 import { MouseEventHandler, useState } from "react";
 import {
@@ -18,6 +19,7 @@ interface Props {
 
 const TodoArchive = (props: Props) => {
   const [depth, setDepth] = useState(0);
+  const [currentFolder, setCurrentFolder] = useState<TodoListNode[]>([]);
   const [archivedTodos, setArchivedTodos] = useState<TodoListNode[]>([]);
 
   todoArchiveReceiver.pong((item) => {
@@ -30,13 +32,19 @@ const TodoArchive = (props: Props) => {
   });
 
   function enterArchive() {
+    if (depth == 0) {
+      setCurrentFolder(archivedTodos);
+    } else {
+      setCurrentFolder([]);
+    }
     setDepth(depth + 1);
     props.setAppListVisibility(false);
   }
 
   function leaveArchive() {
+    if (depth == 1) props.setAppListVisibility(true);
     setDepth(depth - 1);
-    props.setAppListVisibility(true);
+    setCurrentFolder([]);
   }
 
   return (
@@ -56,7 +64,11 @@ const TodoArchive = (props: Props) => {
         />
       </div>
       <div
-        className="AppList-app center"
+        className={resolveClasses(
+          "AppList-app",
+          "center",
+          depth == 0 ? "" : "remove"
+        )}
         onClick={enterArchive}
         onMouseEnter={props.onMouseEnter}
         onMouseLeave={props.onMouseLeave}
@@ -70,6 +82,24 @@ const TodoArchive = (props: Props) => {
         />
         <i>{archivedTodos.length}</i>
       </div>
+      {currentFolder.map((item) => (
+        <div
+          key={item.title}
+          className="AppList-app center"
+          onClick={enterArchive}
+          onMouseEnter={props.onMouseEnter}
+          onMouseLeave={props.onMouseLeave}
+          onMouseMove={props.onMouseMove}
+          title={item.title}
+        >
+          <Schedule
+            theme="outline"
+            size="30"
+            fill="slateblue"
+            strokeWidth={3}
+          />
+        </div>
+      ))}
     </>
   );
 };
