@@ -27,6 +27,11 @@ const TodoArchive = (props : Props) => {
         props.setAppListVisibility(false);
     }
 
+    function leaveArchive() {
+      setDepth(depth - 1);
+      props.setAppListVisibility(true);
+    }
+
     return (
       <>
         <div
@@ -34,7 +39,7 @@ const TodoArchive = (props : Props) => {
             "center",
             depth == 0 ? "remove" : ""
           )}
-          onClick={enterArchive}
+          onClick={leaveArchive}
           onMouseEnter={props.onMouseEnter}
           onMouseLeave={props.onMouseLeave}
           onMouseMove={props.onMouseMove}
