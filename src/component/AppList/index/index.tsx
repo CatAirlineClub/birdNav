@@ -7,6 +7,7 @@ import "./index.css";
 import errorImg from "/assets/icon/error.png";
 import { openWindow } from "../Window";
 import { receiver as todoArchiveReceiver } from "../../TodoArchive/logic";
+import TodoArchive from "../../TodoArchive";
 import { useLocalStorageState } from "@/hooks/useLocalStorageState";
 import { defaultUserAppList, UserApp } from "@/store/app";
 import {
@@ -125,22 +126,12 @@ export const AppList = () => {
     <>
       <div id="App-window"></div>
       <section className="AppList-bottom">
-        <div
-          className="AppList-app center"
-          onClick={() => {}}
-          ref={getAppListApp}
+        <TodoArchive
+          archivedTodos={archivedTodos} 
           onMouseEnter={appMounseEnter}
           onMouseLeave={appMounseLeave}
           onMouseMove={appMounseMove}
-        >
-          <TodoArchiveIcon
-            theme="outline"
-            size="30"
-            fill="slateblue"
-            strokeWidth={3}
-          />
-          <i>{archivedTodos.size}</i>
-        </div>
+        />
         <div
           className="AppList-app center"
           onClick={() => {}}
