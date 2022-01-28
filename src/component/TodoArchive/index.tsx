@@ -1,4 +1,5 @@
-import { ArrowDown as TodoArchiveIcon } from "@icon-park/react";
+import resolveClasses from "@/utils/resolveClasses";
+import { ArrowDown as TodoArchiveIcon, ArrowCircleLeft } from "@icon-park/react";
 import { MouseEventHandler, useState } from "react";
 import { receiver as todoArchiveReceiver } from "./logic";
 
@@ -10,6 +11,7 @@ interface Props {
 }
 
 const TodoArchive = (props : Props) => {
+    const [depth, setDepth] = useState(0);
     const [archivedTodos, setArchivedTodos] = useState(new Map);
 
     todoArchiveReceiver.pong((title, item) => {
@@ -21,10 +23,29 @@ const TodoArchive = (props : Props) => {
     });
 
     function enterArchive() {
+        setDepth(depth + 1);
         props.setAppListVisibility(false);
     }
 
     return (
+      <>
+        <div
+          className={resolveClasses(
+            "center",
+            depth == 0 ? "remove" : ""
+          )}
+          onClick={enterArchive}
+          onMouseEnter={props.onMouseEnter}
+          onMouseLeave={props.onMouseLeave}
+          onMouseMove={props.onMouseMove}
+        >
+          <ArrowCircleLeft
+            theme="outline"
+            size="30"
+            fill="slateblue"
+            strokeWidth={3}
+          />
+        </div>
         <div
           className="AppList-app center"
           onClick={enterArchive}
@@ -40,6 +61,7 @@ const TodoArchive = (props : Props) => {
           />
           <i>{archivedTodos.size}</i>
         </div>
+      </>
     );
 }
 
