@@ -11,13 +11,13 @@ export interface DoneItem {
   doneTime: number;
 }
   
-export interface TodoClone {
+export interface TodoListNode {
   todoList : TodoItem[],
   doneList : DoneItem[],
 }
 
 type BePromise<T> = (value: T | PromiseLike<T>)=>void;
-type Acknowleage = (title: string, value : TodoClone)=>void;
+type Acknowleage = (title: string, value : TodoListNode)=>void;
 
 const resolvers : BePromise<Acknowleage>[] = [];
 const callback_collection : Acknowleage[] = [];
