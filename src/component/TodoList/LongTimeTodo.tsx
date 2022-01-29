@@ -7,7 +7,7 @@ import { nanoid } from "nanoid";
 import React, { useEffect, useState } from "react";
 import "./index.css";
 import { channelArchive as todoChannelArchive } from "../../logic/todo";
-import { channelView as todoChannelView } from "../../logic/todo";
+import { channelLeftView as todoChannelView } from "../../logic/todo";
 import { TodoItem, DoneItem, TodoListNode } from "../../logic/todo";
 
 const { sender: todoArchiveSender } = todoChannelArchive;

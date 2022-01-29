@@ -6,30 +6,29 @@ import { CheckOne, CloseOne, Plus, ReduceOne } from "@icon-park/react";
 import { nanoid } from "nanoid";
 import React, { useEffect, useState } from "react";
 import "./index.css";
-import { channelArchive as todoChannelArchive } from "../../logic/todo";
-import { channelView as todoChannelView } from "../../logic/todo";
+import {
+  channelArchive as todoChannelArchive,
+  Receiver,
+} from "../../logic/todo";
 import { TodoItem, DoneItem, TodoListNode } from "../../logic/todo";
 
 const { sender: todoArchiveSender } = todoChannelArchive;
-const { receiver: todoViewReceiver } = todoChannelView;
-
-const todoClone: TodoListNode = {
-  title: "月度计划",
-  todoList: defaultLongTodoList,
-  doneList: [],
-};
 
 interface TodoProps {
   data: TodoListNode;
   setData: (value: TodoListNode) => void;
+  viewReceiver: Receiver<TodoListNode>;
 }
 
-const LongTimeTodo = ({ data: todoData, setData: setTodoData }: TodoProps) => {
+const LongTimeTodo = ({
+  data: todoData,
+  setData: setTodoData,
+  viewReceiver: todoViewReceiver,
+}: TodoProps) => {
   const [visible, setVisibility] = useState(true);
   const [type, setType] = useState("todo");
-  const [title, setTitle] = useState("月度计划");
 
-  todoViewReceiver.pong((item) => {
+  todoViewReceiver.pong((item: TodoListNode) => {
     setTodoData(item);
     setVisibility(true);
   });
@@ -40,10 +39,13 @@ const LongTimeTodo = ({ data: todoData, setData: setTodoData }: TodoProps) => {
     const newTodoList = [newTodoItem, ...todoData.todoList];
     const newTodoData = Object.assign(
       {},
-      { title, todoList: newTodoList, doneList: todoData.doneList }
+      {
+        title: todoData.title,
+        todoList: newTodoList,
+        doneList: todoData.doneList,
+      }
     );
     setTodoData(newTodoData);
-    todoClone.todoList = newTodoList.filter((_) => true);
   };
 
   const deleteTodoItem = (item: TodoItem) => {
@@ -52,7 +54,11 @@ const LongTimeTodo = ({ data: todoData, setData: setTodoData }: TodoProps) => {
     );
     const newTodoData = Object.assign(
       {},
-      { title, todoList: newTodoList, doneList: todoData.doneList }
+      {
+        title: todoData.title,
+        todoList: newTodoList,
+        doneList: todoData.doneList,
+      }
     );
     setTodoData(newTodoData);
   };
@@ -99,7 +105,7 @@ const LongTimeTodo = ({ data: todoData, setData: setTodoData }: TodoProps) => {
   return (
     <section className={resolveClasses("todo", visible ? "" : "hide")}>
       <TodoHeader
-        title={title}
+        todoData={todoData}
         type={type}
         setType={setType}
         setVisible={setVisibility}
@@ -125,17 +131,17 @@ const LongTimeTodo = ({ data: todoData, setData: setTodoData }: TodoProps) => {
 
 interface TodoHeaderProps {
   type: string;
-  title: string;
+  todoData: TodoListNode;
   setType: (value: string) => void;
   setVisible: (value: boolean) => void;
 }
 
 const TodoHeader: React.FC<TodoHeaderProps> = (props) => {
-  const { type, setType, setVisible, title } = props;
+  const { type, setType, setVisible, todoData } = props;
 
   function save() {
     todoArchiveSender.ping().then((callback) => {
-      callback(todoClone);
+      callback(todoData);
     });
   }
 
@@ -143,7 +149,7 @@ const TodoHeader: React.FC<TodoHeaderProps> = (props) => {
 
   return (
     <section className="todo-header">
-      <span className="todo-header-title">{title}</span>
+      <span className="todo-header-title">{todoData.title}</span>
       <section className="todo-header-btns">
         <section
           className={resolveClasses("todo-header-btn center")}

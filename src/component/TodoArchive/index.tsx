@@ -9,7 +9,7 @@ import {
 import { MouseEventHandler, useState } from "react";
 import {
   channelArchive as todoChannelArchive,
-  channelView as todoChannelView,
+  channelLeftView as todoChannelView,
   TodoListNode,
   TodoListTree,
 } from "../../logic/todo";

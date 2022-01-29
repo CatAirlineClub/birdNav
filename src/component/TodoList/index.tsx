@@ -5,7 +5,12 @@ import "./index.css";
 import { useLocalStorageState } from "@/hooks/useLocalStorageState";
 import { defaultLongTodoList, defaultShortTodoList } from "@/store/todo";
 import { useState } from "react";
-import { DoneItem, TodoListNode } from "@/logic/todo";
+import {
+  channelLeftView,
+  channelRightView,
+  DoneItem,
+  TodoListNode,
+} from "@/logic/todo";
 
 const TodoList = () => {
   const [longTodoList, setLongTodoList] = useLocalStorageState(
@@ -53,8 +58,16 @@ const TodoList = () => {
 
   return (
     <div className="todo-container rowcenter">
-      <View data={longData} setData={setLongDataWrap} />
-      <View data={shortData} setData={setShortDataWrap} />
+      <View
+        data={longData}
+        setData={setLongDataWrap}
+        viewReceiver={channelLeftView.receiver}
+      />
+      <View
+        data={shortData}
+        setData={setShortDataWrap}
+        viewReceiver={channelRightView.receiver}
+      />
     </div>
   );
 };

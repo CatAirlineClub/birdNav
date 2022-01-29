@@ -20,14 +20,17 @@ export interface TodoListNode {
 export type TodoListTree = (TodoListTree | TodoListNode)[];
 
 type BePromise<T> = (value: T | PromiseLike<T>) => void;
-type Acknowleage = (value: TodoListNode) => void;
+type Acknowleage<T> = (value: T) => void;
+export type Receiver<T> = {
+  pong: (cb: Acknowleage<T>) => void;
+};
 
-export function channel() {
-  const resolvers: BePromise<Acknowleage>[] = [];
-  const callback_collection: Acknowleage[] = [];
+export function channel<T>() {
+  const resolvers: BePromise<Acknowleage<T>>[] = [];
+  const callback_collection: Acknowleage<T>[] = [];
 
   const sender = {
-    ping(): Promise<Acknowleage> {
+    ping(): Promise<Acknowleage<T>> {
       return new Promise((resolve) => {
         if (callback_collection.length) {
           return resolve(callback_collection.pop()!);
@@ -37,8 +40,8 @@ export function channel() {
     },
   };
 
-  const receiver = {
-    pong(cb: Acknowleage) {
+  const receiver: Receiver<T> = {
+    pong(cb: Acknowleage<T>) {
       if (resolvers.length) {
         return resolvers.pop()!(cb);
       }
@@ -49,5 +52,6 @@ export function channel() {
   return { sender, receiver };
 }
 
-export const channelArchive = channel();
-export const channelView = channel();
+export const channelArchive = channel<TodoListNode>();
+export const channelLeftView = channel<TodoListNode>();
+export const channelRightView = channel<TodoListNode>();
