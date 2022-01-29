@@ -5,6 +5,7 @@ import {
   Schedule,
   ArrowLeftUp,
   ArrowRightUp,
+  AddOne,
 } from "@icon-park/react";
 import { MouseEventHandler, useState } from "react";
 import {
@@ -77,6 +78,12 @@ const TodoArchive = (props: Props) => {
       cb(openingTodoList!);
       setOpeningMode(false);
     });
+  }
+
+  function newFolder() {
+    const list = archivedTodos.filter(() => true);
+    list.push([]);
+    setArchivedTodos(list);
   }
 
   return (
@@ -186,6 +193,15 @@ const TodoArchive = (props: Props) => {
         }
         return ret;
       })}
+      <AddOne
+        className={resolveClasses(depth == 0 ? "remove" : "")}
+        title="新建文件夹"
+        onClick={newFolder}
+        theme="outline"
+        size="30"
+        fill="slateblue"
+        strokeWidth={3}
+      />
     </>
   );
 };
