@@ -114,9 +114,10 @@ const TodoArchive = (props: Props) => {
         />
         <i>{archivedTodos.length}</i>
       </div>
-      {currentFolder.map((item) => {
+      {currentFolder.flatMap((item) => {
+        const ret = [];
         if (item instanceof Array) {
-          return (
+          ret.push(
             <div
               className={resolveClasses(
                 "AppList-app",
@@ -139,7 +140,7 @@ const TodoArchive = (props: Props) => {
           );
         } else {
           const todoList: TodoListNode = item;
-          return (
+          ret.push(
             <div
               key={todoList.title}
               className="AppList-app center"
@@ -160,24 +161,31 @@ const TodoArchive = (props: Props) => {
               />
             </div>
           );
+          if (openingTodoList == todoList) {
+            ret.push(
+              <ArrowLeftUp
+                className={resolveClasses(openingMode ? "" : "remove")}
+                onClick={toLeftView}
+                theme="outline"
+                size="30"
+                fill="slateblue"
+                strokeWidth={3}
+              />
+            );
+            ret.push(
+              <ArrowRightUp
+                className={resolveClasses(openingMode ? "" : "remove")}
+                onClick={toRightView}
+                theme="outline"
+                size="30"
+                fill="slateblue"
+                strokeWidth={3}
+              />
+            );
+          }
         }
+        return ret;
       })}
-      <ArrowLeftUp
-        className={resolveClasses(openingMode ? "" : "remove")}
-        onClick={toLeftView}
-        theme="outline"
-        size="30"
-        fill="slateblue"
-        strokeWidth={3}
-      />
-      <ArrowRightUp
-        className={resolveClasses(openingMode ? "" : "remove")}
-        onClick={toRightView}
-        theme="outline"
-        size="30"
-        fill="slateblue"
-        strokeWidth={3}
-      />
     </>
   );
 };
