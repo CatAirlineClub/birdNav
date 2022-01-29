@@ -35,8 +35,8 @@
   transition: cubic-bezier(0.213, 0.61, 0.356, 1) 0.9s;
 }
 .hide {
-  visibility: hidden;
+  visibility: hidden !important;
 }
 .remove {
-  display: none;
+  display: none !important;
 }

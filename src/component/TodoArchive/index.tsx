@@ -3,6 +3,8 @@ import {
   FolderOpen as TodoArchiveIcon,
   ArrowCircleLeft,
   Schedule,
+  ArrowLeftUp,
+  ArrowRightUp,
 } from "@icon-park/react";
 import { MouseEventHandler, useState } from "react";
 import {
@@ -20,6 +22,11 @@ interface Props {
 
 const TodoArchive = (props: Props) => {
   const [depth, setDepth] = useState(0);
+  const [openingMode, setOpeningMode] = useState(false);
+  const [openingTodoList, setOpeningTodoList] = useState<
+    TodoListNode | undefined
+  >();
+
   const [currentFolder, setCurrentFolder] = useState<TodoListTree[]>([]);
   const [archivedTodos, setArchivedTodos] = useState<TodoListTree[]>([]);
 
@@ -54,20 +61,20 @@ const TodoArchive = (props: Props) => {
 
   return (
     <>
-      <div
-        className={resolveClasses("center", depth == 0 ? "remove" : "")}
-        onClick={leaveArchive}
-        onMouseEnter={props.onMouseEnter}
-        onMouseLeave={props.onMouseLeave}
-        onMouseMove={props.onMouseMove}
-      >
-        <ArrowCircleLeft
-          theme="outline"
-          size="30"
-          fill="slateblue"
-          strokeWidth={3}
-        />
-      </div>
+      <ArrowCircleLeft
+        className={resolveClasses(depth == 0 ? "remove" : "")}
+        onClick={() => {
+          if (openingMode) {
+            setOpeningMode(false);
+          } else {
+            leaveArchive();
+          }
+        }}
+        theme="outline"
+        size="30"
+        fill="slateblue"
+        strokeWidth={3}
+      />
       <div
         className={resolveClasses(
           "AppList-app",
@@ -116,7 +123,10 @@ const TodoArchive = (props: Props) => {
             <div
               key={todoList.title}
               className="AppList-app center"
-              onClick={enterArchive}
+              onClick={() => {
+                setOpeningTodoList(todoList);
+                setOpeningMode(true);
+              }}
               onMouseEnter={props.onMouseEnter}
               onMouseLeave={props.onMouseLeave}
               onMouseMove={props.onMouseMove}
@@ -132,6 +142,22 @@ const TodoArchive = (props: Props) => {
           );
         }
       })}
+      <ArrowLeftUp
+        className={resolveClasses(openingMode ? "" : "remove")}
+        onClick={leaveArchive}
+        theme="outline"
+        size="30"
+        fill="slateblue"
+        strokeWidth={3}
+      />
+      <ArrowRightUp
+        className={resolveClasses(openingMode ? "" : "remove")}
+        onClick={() => {}}
+        theme="outline"
+        size="30"
+        fill="slateblue"
+        strokeWidth={3}
+      />
     </>
   );
 };
