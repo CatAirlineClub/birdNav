@@ -1,5 +1,3 @@
-import LongTimeTodo from "./LongTimeTodo";
-import ShortTimeTodo from "./ShortTimeTodo";
 import View from "./TodoView";
 import "./index.css";
 import { useLocalStorageState } from "@/hooks/useLocalStorageState";
