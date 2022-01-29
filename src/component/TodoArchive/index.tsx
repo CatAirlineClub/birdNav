@@ -43,6 +43,9 @@ const TodoArchive = (props: Props) => {
     const list = archivedTodos.filter(() => true);
     list.push(item);
     setArchivedTodos(list);
+    if (depth == 1) {
+      setCurrentFolder(list);
+    }
     console.log("archivedTodos", archivedTodos);
   });
 
