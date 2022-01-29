@@ -37,6 +37,7 @@ const LongTimeTodo = () => {
     setTitle(item.title);
     setTodoList(item.todoList);
     setDoneList(item.doneList);
+    setVisibility(true);
   });
 
   const addTodoItem = (content: { title: string; createTime: number }) => {
