@@ -17,7 +17,7 @@ import {
 
 const { receiver: todoArchiveReceiver } = todoChannelArchive;
 const { sender: todoLeftViewSender } = todoLeftView;
-const { sender: todoRightViewSender } = todoLeftView;
+const { sender: todoRightViewSender } = todoRightView;
 
 interface Props {
   onMouseEnter: MouseEventHandler<HTMLDivElement>;
