@@ -20,7 +20,7 @@ export interface TodoListNode {
 export type TodoListTree = (TodoListTree | TodoListNode)[];
 
 type BePromise<T> = (value: T | PromiseLike<T>) => void;
-type Acknowleage = (value: TodoListTree) => void;
+type Acknowleage = (value: TodoListNode) => void;
 
 export function channel() {
   const resolvers: BePromise<Acknowleage>[] = [];
@@ -50,3 +50,4 @@ export function channel() {
 }
 
 export const channelArchive = channel();
+export const channelView = channel();

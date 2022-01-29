@@ -29,8 +29,8 @@ const TodoArchive = (props: Props) => {
     TodoListNode | undefined
   >();
 
-  const [currentFolder, setCurrentFolder] = useState<TodoListTree[]>([]);
-  const [archivedTodos, setArchivedTodos] = useState<TodoListTree[]>([]);
+  const [currentFolder, setCurrentFolder] = useState<TodoListTree>([]);
+  const [archivedTodos, setArchivedTodos] = useState<TodoListTree>([]);
 
   todoArchiveReceiver.pong((item) => {
     console.log(item);

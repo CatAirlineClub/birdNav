@@ -7,10 +7,11 @@ import { nanoid } from "nanoid";
 import React, { useEffect, useState } from "react";
 import "./index.css";
 import { channelArchive as todoChannelArchive } from "../../logic/todo";
-import TodoList from ".";
+import { channelView as todoChannelView } from "../../logic/todo";
 import { TodoItem, DoneItem, TodoListNode } from "../../logic/todo";
 
 const { sender: todoArchiveSender } = todoChannelArchive;
+const { receiver: todoViewReceiver } = todoChannelView;
 
 const todoClone: TodoListNode = {
   title: "月度计划",
@@ -30,6 +31,13 @@ const LongTimeTodo = () => {
     [] as UserAppList | DoneItem[]
   );
   const [type, setType] = useState("todo");
+  const [title, setTitle] = useState("月度计划");
+
+  todoViewReceiver.pong((item) => {
+    setTitle(item.title);
+    setTodoList(item.todoList);
+    setDoneList(item.doneList);
+  });
 
   const addTodoItem = (content: { title: string; createTime: number }) => {
     if (!content.title) return;
@@ -86,7 +94,12 @@ const LongTimeTodo = () => {
 
   return (
     <section className={resolveClasses("todo", visible ? "" : "hide")}>
-      <TodoHeader type={type} setType={setType} setVisible={setVisibility} />
+      <TodoHeader
+        title={title}
+        type={type}
+        setType={setType}
+        setVisible={setVisibility}
+      />
       {type === "todo" && (
         <TodoContent
           list={todoList}
@@ -108,12 +121,13 @@ const LongTimeTodo = () => {
 
 interface TodoHeaderProps {
   type: string;
+  title: string;
   setType: (value: string) => void;
   setVisible: (value: boolean) => void;
 }
 
 const TodoHeader: React.FC<TodoHeaderProps> = (props) => {
-  const { type, setType, setVisible } = props;
+  const { type, setType, setVisible, title } = props;
 
   function save() {
     todoArchiveSender.ping().then((callback) => {
@@ -125,7 +139,7 @@ const TodoHeader: React.FC<TodoHeaderProps> = (props) => {
 
   return (
     <section className="todo-header">
-      <span className="todo-header-title">月度计划</span>
+      <span className="todo-header-title">{title}</span>
       <section className="todo-header-btns">
         <section
           className={resolveClasses("todo-header-btn center")}
