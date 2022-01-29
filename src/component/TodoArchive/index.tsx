@@ -10,12 +10,14 @@ import { MouseEventHandler, useState } from "react";
 import {
   channelArchive as todoChannelArchive,
   channelLeftView as todoLeftView,
+  channelRightView as todoRightView,
   TodoListNode,
   TodoListTree,
 } from "../../logic/todo";
 
 const { receiver: todoArchiveReceiver } = todoChannelArchive;
 const { sender: todoLeftViewSender } = todoLeftView;
+const { sender: todoRightViewSender } = todoLeftView;
 
 interface Props {
   onMouseEnter: MouseEventHandler<HTMLDivElement>;
@@ -65,6 +67,13 @@ const TodoArchive = (props: Props) => {
 
   function toLeftView() {
     todoLeftViewSender.ping().then((cb) => {
+      cb(openingTodoList!);
+      setOpeningMode(false);
+    });
+  }
+
+  function toRightView() {
+    todoRightViewSender.ping().then((cb) => {
       cb(openingTodoList!);
       setOpeningMode(false);
     });
@@ -163,7 +172,7 @@ const TodoArchive = (props: Props) => {
       />
       <ArrowRightUp
         className={resolveClasses(openingMode ? "" : "remove")}
-        onClick={() => {}}
+        onClick={toRightView}
         theme="outline"
         size="30"
         fill="slateblue"
