@@ -6,9 +6,11 @@ import { CheckOne, CloseOne, Plus, ReduceOne } from "@icon-park/react";
 import { nanoid } from "nanoid";
 import React, { useEffect, useState } from "react";
 import "./index.css";
-import { sender as todoArchiveSender } from "../../logic/todo";
+import { channelArchive as todoChannelArchive } from "../../logic/todo";
 import TodoList from ".";
 import { TodoItem, DoneItem, TodoListNode } from "../../logic/todo";
+
+const { sender: todoArchiveSender } = todoChannelArchive;
 
 const todoClone: TodoListNode = {
   title: "月度计划",

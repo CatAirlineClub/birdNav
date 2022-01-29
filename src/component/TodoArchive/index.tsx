@@ -8,10 +8,12 @@ import {
 } from "@icon-park/react";
 import { MouseEventHandler, useState } from "react";
 import {
-  receiver as todoArchiveReceiver,
+  channelArchive as todoChannelArchive,
   TodoListNode,
   TodoListTree,
 } from "../../logic/todo";
+
+const { receiver: todoArchiveReceiver } = todoChannelArchive;
 
 interface Props {
   onMouseEnter: MouseEventHandler<HTMLDivElement>;

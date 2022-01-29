@@ -22,25 +22,31 @@ export type TodoListTree = (TodoListTree | TodoListNode)[];
 type BePromise<T> = (value: T | PromiseLike<T>) => void;
 type Acknowleage = (value: TodoListTree) => void;
 
-const resolvers: BePromise<Acknowleage>[] = [];
-const callback_collection: Acknowleage[] = [];
+export function channel() {
+  const resolvers: BePromise<Acknowleage>[] = [];
+  const callback_collection: Acknowleage[] = [];
 
-export const sender = {
-  ping(): Promise<Acknowleage> {
-    return new Promise((resolve) => {
-      if (callback_collection.length) {
-        return resolve(callback_collection.pop()!);
+  const sender = {
+    ping(): Promise<Acknowleage> {
+      return new Promise((resolve) => {
+        if (callback_collection.length) {
+          return resolve(callback_collection.pop()!);
+        }
+        resolvers.push(resolve);
+      });
+    },
+  };
+
+  const receiver = {
+    pong(cb: Acknowleage) {
+      if (resolvers.length) {
+        return resolvers.pop()!(cb);
       }
-      resolvers.push(resolve);
-    });
-  },
-};
+      callback_collection.push(cb);
+    },
+  };
 
-export const receiver = {
-  pong(cb: Acknowleage) {
-    if (resolvers.length) {
-      return resolvers.pop()!(cb);
-    }
-    callback_collection.push(cb);
-  },
-};
+  return { sender, receiver };
+}
+
+export const channelArchive = channel();
