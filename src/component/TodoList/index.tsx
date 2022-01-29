@@ -3,36 +3,58 @@ import ShortTimeTodo from "./ShortTimeTodo";
 import View from "./TodoView";
 import "./index.css";
 import { useLocalStorageState } from "@/hooks/useLocalStorageState";
-import { defaultLongTodoList } from "@/store/todo";
+import { defaultLongTodoList, defaultShortTodoList } from "@/store/todo";
 import { useState } from "react";
 import { DoneItem, TodoListNode } from "@/logic/todo";
 
 const TodoList = () => {
-  const [todoList, setTodoList] = useLocalStorageState(
+  const [longTodoList, setLongTodoList] = useLocalStorageState(
     "long-todolist",
     defaultLongTodoList
   );
-  const [doneList, setDoneList] = useLocalStorageState<DoneItem[]>(
+  const [longDoneList, setLongDoneList] = useLocalStorageState<DoneItem[]>(
     "long-donelist",
     []
   );
-  const [title, setTitle] = useState("月度计划");
-  const [data, setData] = useState<TodoListNode>({
+  const [longData, setLongData] = useState<TodoListNode>({
     title: "月度计划",
-    todoList,
-    doneList,
+    todoList: longTodoList,
+    doneList: longDoneList,
   });
-  function setDataWrap(data: TodoListNode) {
+  function setLongDataWrap(data: TodoListNode) {
     if (data.title == "月度计划") {
-      setTodoList(data.todoList);
-      setDoneList(data.doneList);
+      setLongTodoList(data.todoList);
+      setLongDoneList(data.doneList);
     }
-    setData(data);
+    setLongData(data);
   }
+
+  const [shortTodoList, setShortTodoList] = useLocalStorageState(
+    "short-todolist",
+    defaultShortTodoList
+  );
+  const [shortDoneList, setShortDoneList] = useLocalStorageState<DoneItem[]>(
+    "short-donelist",
+    []
+  );
+
+  const [shortData, setShortData] = useState<TodoListNode>({
+    title: "近期待办",
+    todoList: shortTodoList,
+    doneList: shortDoneList,
+  });
+  function setShortDataWrap(data: TodoListNode) {
+    if (data.title == "近期待办") {
+      setShortTodoList(data.todoList);
+      setShortDoneList(data.doneList);
+    }
+    setShortData(data);
+  }
+
   return (
     <div className="todo-container rowcenter">
-      <View data={data} setData={setDataWrap}></View>
-      <ShortTimeTodo></ShortTimeTodo>
+      <View data={longData} setData={setLongDataWrap} />
+      <View data={shortData} setData={setShortDataWrap} />
     </div>
   );
 };
