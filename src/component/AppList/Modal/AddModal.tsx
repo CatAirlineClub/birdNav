@@ -4,17 +4,9 @@ import "./public.css";
 import { getMaxZindex } from "@/store/global";
 import { setLocal } from "@/utils/local";
 import { nanoid } from "nanoid";
-import resolveClasses from "@/utils/resolveClasses";
-let old_el: HTMLDivElement;
-export const addApp = (
-  appList: any,
-  setData: any,
-  show: any,
-  toUrlMode: any
-) => {
-  if (old_el) document.body.removeChild(old_el);
+
+export const addApp = (appList: any, setData: any, toUrlMode: any) => {
   let el = document.createElement("div");
-  old_el = el;
   document.body.appendChild(el);
 
   const onOk = (newAppData: {}) => {
@@ -29,18 +21,13 @@ export const addApp = (
   };
 
   ReactDOM.render(
-    <AddModal
-      onOK={onOk}
-      onCancel={onCancel}
-      toUrlMode={toUrlMode}
-      show={show}
-    />,
+    <AddModal onOK={onOk} onCancel={onCancel} toUrlMode={toUrlMode} />,
     el
   );
 };
 
 const AddModal = (props: any) => {
-  const { onOK, onCancel, toUrlMode, show } = props;
+  const { onOK, onCancel, toUrlMode } = props;
 
   const [newAppData, setNewAppData] = useState({
     id: nanoid(),
@@ -63,10 +50,7 @@ const AddModal = (props: any) => {
   };
 
   return (
-    <div
-      className={resolveClasses("AppModal", show ? "" : "remove")}
-      style={{ zIndex: getMaxZindex() }}
-    >
+    <div className="AppModal" style={{ zIndex: getMaxZindex() }}>
       <span className="AppModal_title rowcenter">
         添加应用&nbsp;&nbsp;
         <i

@@ -183,10 +183,7 @@ export const AppList = () => {
             visible ? "" : "hide"
           )}
           onClick={() => {
-            addApp(userAppList, setUserAppList, !addUrlMode, () => {
-              setAddUrlMode(true);
-              addUrl();
-            });
+            addApp(userAppList, setUserAppList, addUrl);
           }}
           ref={getAppListApp}
           onMouseEnter={appMouseEnter}
