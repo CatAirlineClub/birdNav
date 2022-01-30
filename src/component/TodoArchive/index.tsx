@@ -8,7 +8,7 @@ import {
   AddOne,
   Delete,
 } from "@icon-park/react";
-import { MouseEventHandler, useState } from "react";
+import { MouseEventHandler, useEffect, useState } from "react";
 import {
   channelArchive as todoChannelArchive,
   channelLeftView as todoLeftView,
@@ -29,33 +29,39 @@ interface Props {
 }
 
 const TodoArchive = (props: Props) => {
-  const [depth, setDepth] = useState<0 | 1>(0);
   const [openingMode, setOpeningMode] = useState(false);
   const [openingTodoList, setOpeningTodoList] = useState<
     TodoListNode | undefined
   >();
 
   const [archivedTodos, setArchivedTodos] = useState<TodoListTree>([]);
-  const currentFolder = depth == 0 ? [archivedTodos] : archivedTodos;
+  useEffect(() => {
+    todoArchiveReceiver.pong((item) => {
+      if (path.length) {
+        path[path.length - 1].push(item);
+      } else {
+        archivedTodos.push(item);
+      }
 
-  todoArchiveReceiver.pong((item) => {
-    console.log(item);
-    console.log("archivedTodos", archivedTodos);
-    const list = archivedTodos.filter(() => true);
-    list.push(item);
-    setArchivedTodos(list);
-    console.log("archivedTodos", archivedTodos);
+      setPath(path.filter(() => true));
+      setArchivedTodos(archivedTodos.filter(() => true));
+    });
   });
+  const [path, setPath] = useState<TodoListTree[]>([]);
 
-  function enterArchive() {
+  const viewing = path.length > 0;
+  const currentFolder = viewing ? path[path.length - 1] : [[]];
+
+  function enterArchive(node: TodoListTree) {
     props.setAppListVisibility(false);
-    if (depth == 1) return;
-    setDepth(1);
+    const list = path.filter(() => true);
+    list.push(node);
+    setPath(list);
   }
 
   function leaveArchive() {
-    props.setAppListVisibility(true);
-    setDepth(0);
+    if (path.length <= 1) props.setAppListVisibility(true);
+    setPath(path.filter((_, index) => index < path.length - 1));
   }
 
   function deleteTodo(todo: TodoListNode) {
@@ -78,15 +84,16 @@ const TodoArchive = (props: Props) => {
   }
 
   function newFolder() {
-    const list = archivedTodos.filter(() => true);
-    list.push([]);
-    setArchivedTodos(list);
+    const folder: TodoListTree = [];
+    path[path.length - 1].push(folder);
+    setPath(path.filter(() => true));
+    setArchivedTodos(archivedTodos.filter(() => true));
   }
 
   return (
     <>
       <ArrowCircleLeft
-        className={resolveClasses(depth == 0 ? "remove" : "")}
+        className={resolveClasses(viewing ? "" : "remove")}
         onClick={() => {
           if (openingMode) {
             setOpeningMode(false);
@@ -106,7 +113,7 @@ const TodoArchive = (props: Props) => {
             <div
               key={"todo-" + index + "-1"}
               className={resolveClasses("AppList-app", "center")}
-              onClick={enterArchive}
+              onClick={enterArchive.bind(null, viewing ? item : archivedTodos)}
               onMouseEnter={props.onMouseEnter}
               onMouseLeave={props.onMouseLeave}
               onMouseMove={props.onMouseMove}
@@ -117,7 +124,7 @@ const TodoArchive = (props: Props) => {
                 fill="slateblue"
                 strokeWidth={3}
               />
-              <i>{item.length}</i>
+              <i>{viewing ? item.length : archivedTodos.length}</i>
             </div>
           );
         } else {
@@ -182,7 +189,7 @@ const TodoArchive = (props: Props) => {
         return ret;
       })}
       <AddOne
-        className={resolveClasses(depth == 0 ? "remove" : "")}
+        className={resolveClasses(viewing ? "" : "remove")}
         title="新建文件夹"
         onClick={newFolder}
         theme="outline"
@@ -190,8 +197,9 @@ const TodoArchive = (props: Props) => {
         fill="slateblue"
         strokeWidth={3}
       />
-      {/*(currentFolder {currentFolder.length})
-      (archivedTodos {archivedTodos.length})*/}
+      {/*
+      {['path', 'currentFolder', 'archivedTodos'].map(x => x + JSON.stringify(eval(x)))}
+      */}
     </>
   );
 };
