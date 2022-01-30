@@ -6,6 +6,7 @@ import {
   ArrowLeftUp,
   ArrowRightUp,
   AddOne,
+  Delete,
 } from "@icon-park/react";
 import { MouseEventHandler, useState } from "react";
 import {
@@ -57,6 +58,11 @@ const TodoArchive = (props: Props) => {
     setDepth(0);
   }
 
+  function deleteTodo(todo: TodoListNode) {
+    setArchivedTodos(archivedTodos.filter((x) => x !== todo));
+    setOpeningMode(false);
+  }
+
   function toLeftView() {
     todoLeftViewSender.ping().then((cb) => {
       cb(openingTodoList!);
@@ -93,11 +99,12 @@ const TodoArchive = (props: Props) => {
         fill="slateblue"
         strokeWidth={3}
       />
-      {currentFolder.flatMap((item) => {
+      {currentFolder.flatMap((item, index) => {
         const ret = [];
         if (item instanceof Array) {
           ret.push(
             <div
+              key={"todo-" + index + "-1"}
               className={resolveClasses("AppList-app", "center")}
               onClick={enterArchive}
               onMouseEnter={props.onMouseEnter}
@@ -117,7 +124,7 @@ const TodoArchive = (props: Props) => {
           const todoList: TodoListNode = item;
           ret.push(
             <div
-              key={todoList.title}
+              key={"todo-" + index + "-2"}
               className="AppList-app center"
               onClick={() => {
                 setOpeningTodoList(todoList);
@@ -138,7 +145,19 @@ const TodoArchive = (props: Props) => {
           );
           if (openingTodoList == todoList) {
             ret.push(
+              <Delete
+                key={"todo-" + index + "-3"}
+                className={resolveClasses(openingMode ? "" : "remove")}
+                onClick={deleteTodo.bind(null, openingTodoList)}
+                theme="outline"
+                size="30"
+                fill="slateblue"
+                strokeWidth={3}
+              />
+            );
+            ret.push(
               <ArrowLeftUp
+                key={"todo-" + index + "-4"}
                 className={resolveClasses(openingMode ? "" : "remove")}
                 onClick={toLeftView}
                 theme="outline"
@@ -149,6 +168,7 @@ const TodoArchive = (props: Props) => {
             );
             ret.push(
               <ArrowRightUp
+                key={"todo-" + index + "-5"}
                 className={resolveClasses(openingMode ? "" : "remove")}
                 onClick={toRightView}
                 theme="outline"
