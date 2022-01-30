@@ -90,6 +90,18 @@ const TodoArchive = (props: Props) => {
     setArchivedTodos(archivedTodos.filter(() => true));
   }
 
+  function deleteFolder() {
+    const target = path[path.length - 1];
+    const parent = path[path.length - 2];
+
+    const index = parent.indexOf(target);
+
+    parent.splice(index, 1);
+
+    setArchivedTodos(archivedTodos.filter(() => true));
+    leaveArchive();
+  }
+
   return (
     <>
       <ArrowCircleLeft
@@ -199,6 +211,15 @@ const TodoArchive = (props: Props) => {
         size="30"
         fill="slateblue"
         strokeWidth={3}
+      />
+      <Delete
+        className={resolveClasses(path.length > 1 ? "" : "remove")}
+        onClick={deleteFolder}
+        theme="outline"
+        size="30"
+        fill="slateblue"
+        strokeWidth={3}
+        title="删除文件夹"
       />
       {/*
       {['path', 'currentFolder', 'archivedTodos'].map(x => x + JSON.stringify(eval(x)))}
