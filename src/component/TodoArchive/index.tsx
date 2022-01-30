@@ -39,7 +39,11 @@ const TodoArchive = (props: Props) => {
   const [path, setPath] = useState<number[]>([]);
   useEffect(() => {
     todoArchiveReceiver.pong((item) => {
-      currentFolder.push(item);
+      if (viewing) {
+        currentFolder.push(item);
+      } else {
+        archivedTodos[0].push(item);
+      }
       setArchivedTodos([...archivedTodos]);
     });
   });
