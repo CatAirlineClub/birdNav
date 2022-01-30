@@ -160,6 +160,7 @@ const TodoArchive = (props: Props) => {
                 size="30"
                 fill="slateblue"
                 strokeWidth={3}
+                title="删除待办"
               />
             );
             ret.push(
@@ -171,6 +172,7 @@ const TodoArchive = (props: Props) => {
                 size="30"
                 fill="slateblue"
                 strokeWidth={3}
+                title="在左侧打开"
               />
             );
             ret.push(
@@ -182,6 +184,7 @@ const TodoArchive = (props: Props) => {
                 size="30"
                 fill="slateblue"
                 strokeWidth={3}
+                title="在右侧打开"
               />
             );
           }
