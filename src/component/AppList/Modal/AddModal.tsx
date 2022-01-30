@@ -4,9 +4,17 @@ import "./public.css";
 import { getMaxZindex } from "@/store/global";
 import { setLocal } from "@/utils/local";
 import { nanoid } from "nanoid";
-
-export const addApp = (appList: any, setData: any) => {
+import resolveClasses from "@/utils/resolveClasses";
+let old_el: HTMLDivElement;
+export const addApp = (
+  appList: any,
+  setData: any,
+  show: any,
+  toUrlMode: any
+) => {
+  if (old_el) document.body.removeChild(old_el);
   let el = document.createElement("div");
+  old_el = el;
   document.body.appendChild(el);
 
   const onOk = (newAppData: {}) => {
@@ -20,11 +28,19 @@ export const addApp = (appList: any, setData: any) => {
     document.body.removeChild(el);
   };
 
-  ReactDOM.render(<AddModal onOK={onOk} onCancel={onCancel} />, el);
+  ReactDOM.render(
+    <AddModal
+      onOK={onOk}
+      onCancel={onCancel}
+      toUrlMode={toUrlMode}
+      show={show}
+    />,
+    el
+  );
 };
 
 const AddModal = (props: any) => {
-  const { onOK, onCancel } = props;
+  const { onOK, onCancel, toUrlMode, show } = props;
 
   const [newAppData, setNewAppData] = useState({
     id: nanoid(),
@@ -47,8 +63,22 @@ const AddModal = (props: any) => {
   };
 
   return (
-    <div className="AppModal" style={{ zIndex: getMaxZindex() }}>
-      <span className="AppModal_title rowcenter">添加应用</span>
+    <div
+      className={resolveClasses("AppModal", show ? "" : "remove")}
+      style={{ zIndex: getMaxZindex() }}
+    >
+      <span className="AppModal_title rowcenter">
+        添加应用&nbsp;&nbsp;
+        <i
+          onClick={() => {
+            onCancel();
+            toUrlMode();
+          }}
+          className="noselect toggle"
+        >
+          &gt;
+        </i>
+      </span>
       <div className="AppModal_row">
         <span>APP名称：</span>
         <input

@@ -1,5 +1,10 @@
-import { AddOne, SettingOne, ArrowDown as TodoArchiveIcon } from "@icon-park/react";
+import {
+  AddOne,
+  SettingOne,
+  ArrowDown as TodoArchiveIcon,
+} from "@icon-park/react";
 import { addApp } from "../Modal/AddModal";
+import { addUrl } from "../Modal/UrlModal";
 import { editApp } from "../Modal/EditModal";
 import "./index.css";
 // import '@/styles/animation.css'
@@ -21,9 +26,7 @@ import {
 import LoImage from "./LoImage";
 import resolveClasses from "@/utils/resolveClasses";
 
-
 export const AppList = () => {
-
   // 内置应用列表属于不可删改的应用
   // const [preAppList, setPreAppList] = useState([])
   // todo: 网址文件夹管理器（）子应用、小游戏
@@ -34,6 +37,8 @@ export const AppList = () => {
   );
 
   const [visible, setVisibility] = useState(true);
+
+  const [addUrlMode, setAddUrlMode] = useState(false);
 
   const runApp = (appData: UserApp, appIndex: number) => {
     if (appData.type === "inner") {
@@ -128,7 +133,8 @@ export const AppList = () => {
         />
         <div
           className={resolveClasses(
-            "AppList-app", "center",
+            "AppList-app",
+            "center",
             visible ? "" : "hide"
           )}
           onClick={() => {}}
@@ -148,7 +154,8 @@ export const AppList = () => {
           userAppList.map((appData: any, appIndex: number) => (
             <div
               className={resolveClasses(
-                "AppList-app", "center",
+                "AppList-app",
+                "center",
                 visible ? "" : "hide"
               )}
               key={appIndex}
@@ -171,16 +178,23 @@ export const AppList = () => {
           ))}
         <div
           className={resolveClasses(
-            "AppList-app", "center",
+            "AppList-app",
+            "center",
             visible ? "" : "hide"
           )}
-          onClick={() => addApp(userAppList, setUserAppList)}
+          onClick={() => {
+            addApp(userAppList, setUserAppList, !addUrlMode, () => {
+              setAddUrlMode(true);
+              addUrl();
+            });
+          }}
           ref={getAppListApp}
           onMouseEnter={appMouseEnter}
           onMouseLeave={appMouseLeave}
           onMouseMove={appMouseMove}
         >
           <AddOne theme="outline" size="30" fill="slateblue" strokeWidth={3} />
+          <i>{JSON.stringify(addUrlMode)}</i>
         </div>
       </section>
     </>

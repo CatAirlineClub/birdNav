@@ -1,10 +1,7 @@
-import { useLocalStorageState } from "@/hooks/useLocalStorageState";
-import { UserAppList } from "@/store/app";
-import { defaultLongTodoList } from "@/store/todo";
 import resolveClasses from "@/utils/resolveClasses";
 import { CheckOne, CloseOne, Plus, ReduceOne } from "@icon-park/react";
 import { nanoid } from "nanoid";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./index.css";
 import {
   channelArchive as todoChannelArchive,
