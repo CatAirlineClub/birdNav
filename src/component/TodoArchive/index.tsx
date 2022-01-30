@@ -28,23 +28,14 @@ interface Props {
 }
 
 const TodoArchive = (props: Props) => {
-  const [depth, setDepth] = useState(0);
+  const [depth, setDepth] = useState<0 | 1>(0);
   const [openingMode, setOpeningMode] = useState(false);
   const [openingTodoList, setOpeningTodoList] = useState<
     TodoListNode | undefined
   >();
 
-  const [currentFolder, setCurrentFolder] = useState<TodoListTree>([]);
-  const [archivedTodos, setArchivedTodos] = (function () {
-    const [val, set] = useState<TodoListTree>([]);
-    function wrap(val: TodoListTree) {
-      if (depth == 1) {
-        setCurrentFolder(archivedTodos);
-      }
-      set(val);
-    }
-    return [val, set];
-  })();
+  const [archivedTodos, setArchivedTodos] = useState<TodoListTree>([]);
+  const currentFolder = depth == 0 ? [archivedTodos] : archivedTodos;
 
   todoArchiveReceiver.pong((item) => {
     console.log(item);
@@ -52,30 +43,18 @@ const TodoArchive = (props: Props) => {
     const list = archivedTodos.filter(() => true);
     list.push(item);
     setArchivedTodos(list);
-    if (depth == 1) {
-      setCurrentFolder(list);
-    }
     console.log("archivedTodos", archivedTodos);
   });
 
   function enterArchive() {
-    if (depth == 0) {
-      setCurrentFolder(archivedTodos);
-    } else {
-      setCurrentFolder([]);
-    }
-    setDepth(depth + 1);
     props.setAppListVisibility(false);
+    if (depth == 1) return;
+    setDepth(1);
   }
 
   function leaveArchive() {
-    if (depth == 1) props.setAppListVisibility(true);
-    if (depth == 2) {
-      setCurrentFolder(archivedTodos);
-    } else {
-      setCurrentFolder([]);
-    }
-    setDepth(depth - 1);
+    props.setAppListVisibility(true);
+    setDepth(0);
   }
 
   function toLeftView() {
@@ -114,35 +93,12 @@ const TodoArchive = (props: Props) => {
         fill="slateblue"
         strokeWidth={3}
       />
-      <div
-        className={resolveClasses(
-          "AppList-app",
-          "center",
-          depth == 0 ? "" : "remove"
-        )}
-        onClick={enterArchive}
-        onMouseEnter={props.onMouseEnter}
-        onMouseLeave={props.onMouseLeave}
-        onMouseMove={props.onMouseMove}
-      >
-        <TodoArchiveIcon
-          theme="outline"
-          size="30"
-          fill="slateblue"
-          strokeWidth={3}
-        />
-        <i>{archivedTodos.length}</i>
-      </div>
       {currentFolder.flatMap((item) => {
         const ret = [];
         if (item instanceof Array) {
           ret.push(
             <div
-              className={resolveClasses(
-                "AppList-app",
-                "center",
-                depth == 0 ? "" : "remove"
-              )}
+              className={resolveClasses("AppList-app", "center")}
               onClick={enterArchive}
               onMouseEnter={props.onMouseEnter}
               onMouseLeave={props.onMouseLeave}
@@ -214,6 +170,8 @@ const TodoArchive = (props: Props) => {
         fill="slateblue"
         strokeWidth={3}
       />
+      {/*(currentFolder {currentFolder.length})
+      (archivedTodos {archivedTodos.length})*/}
     </>
   );
 };
