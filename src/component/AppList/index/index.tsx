@@ -194,7 +194,6 @@ export const AppList = () => {
           onMouseMove={appMouseMove}
         >
           <AddOne theme="outline" size="30" fill="slateblue" strokeWidth={3} />
-          <i>{JSON.stringify(addUrlMode)}</i>
         </div>
       </section>
     </>
