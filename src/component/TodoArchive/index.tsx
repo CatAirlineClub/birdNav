@@ -65,8 +65,12 @@ const TodoArchive = (props: Props) => {
   }
 
   function deleteTodo(todo: TodoListNode) {
-    setArchivedTodos(archivedTodos.filter((x) => x !== todo));
     setOpeningMode(false);
+    const target = path[path.length - 1];
+    const index = target.indexOf(todo);
+    target.splice(index, 1);
+    setArchivedTodos(archivedTodos.filter(() => true));
+    setPath(path.filter(() => true));
   }
 
   function toLeftView() {
@@ -221,9 +225,13 @@ const TodoArchive = (props: Props) => {
         strokeWidth={3}
         title="删除文件夹"
       />
-      {/*
-      {['path', 'currentFolder', 'archivedTodos'].map(x => x + JSON.stringify(eval(x)))}
-      */}
+      {["path", "currentFolder", "archivedTodos"].map((x) => {
+        function format(array: Array<unknown>): Array<unknown> {
+          return array.map((x) => (x instanceof Array ? format(x) : "x"));
+        }
+        const array = eval(x);
+        return x + JSON.stringify(format(array));
+      })}
     </>
   );
 };
